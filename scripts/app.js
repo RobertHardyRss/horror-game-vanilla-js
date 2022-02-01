@@ -108,9 +108,39 @@ class Monster {
 		this.y = 0;
 
 		this.baseSpeed = 3;
+
+		this.movement = {
+			timeSinceLastUpdate: 0,
+			timeToNextUpdate: 1000, // 1000 milliseconds = 1 second
+			x: {
+				direction: 1,
+				speed: this.baseSpeed,
+			},
+			y: {
+				direction: 1,
+				speed: this.baseSpeed,
+			},
+		};
 	}
 
-	update(elapsedTime) {}
+	update(elapsedTime) {
+		this.movement.timeSinceLastUpdate += elapsedTime;
+		if (
+			this.movement.timeSinceLastUpdate >= this.movement.timeToNextUpdate
+		) {
+			this.movement.x.direction = Math.random() >= 0.5 ? 1 : -1;
+			this.movement.y.direction = Math.random() >= 0.5 ? 1 : -1;
+
+			this.movement.x.speed = Math.random() * this.baseSpeed;
+			this.movement.y.speed = Math.random() * this.baseSpeed;
+
+			this.movement.timeToNextUpdate = Math.random() * 1000 + 500;
+			this.movement.timeSinceLastUpdate = 0;
+		}
+
+		this.x += this.movement.x.speed * this.movement.x.direction;
+		this.y += this.movement.y.speed * this.movement.y.direction;
+	}
 
 	render() {
 		ctx.save();
