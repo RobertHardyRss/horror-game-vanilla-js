@@ -90,6 +90,19 @@ class Player {
 		if (this.isMovingLeft) {
 			this.x -= speed;
 		}
+
+		if (this.x + this.width >= canvas.width) {
+			this.x = canvas.width - this.width;
+		}
+		if (this.x <= 0) {
+			this.x = 0;
+		}
+		if (this.y + this.height >= canvas.height) {
+			this.y = canvas.height - this.height;
+		}
+		if (this.y <= 0) {
+			this.y = 0;
+		}
 	}
 
 	render() {
@@ -138,6 +151,19 @@ class Monster {
 			this.movement.timeSinceLastUpdate = 0;
 		}
 
+		if (this.x + this.width >= canvas.width) {
+			this.movement.x.direction = -1;
+		}
+		if (this.x <= 0) {
+			this.movement.x.direction = 1;
+		}
+		if (this.y + this.height >= canvas.height) {
+			this.movement.y.direction = -1;
+		}
+		if (this.y <= 0) {
+			this.movement.y.direction = 1;
+		}
+
 		this.x += this.movement.x.speed * this.movement.x.direction;
 		this.y += this.movement.y.speed * this.movement.y.direction;
 	}
@@ -156,6 +182,8 @@ let m1 = new Monster();
 let gameObjects = [player, m1];
 
 let currentTime = 0;
+let lastMonsterAdded = 0;
+const monsterSpawnRate = 1000;
 
 function gameLoop(timestamp) {
 	//console.log(timestamp);
@@ -164,6 +192,12 @@ function gameLoop(timestamp) {
 
 	let elapsedTime = Math.floor(timestamp - currentTime);
 	currentTime = timestamp;
+
+	lastMonsterAdded += elapsedTime;
+	if (lastMonsterAdded >= monsterSpawnRate) {
+		gameObjects.push(new Monster());
+		lastMonsterAdded = 0;
+	}
 
 	gameObjects.forEach((o) => {
 		o.update(elapsedTime);
