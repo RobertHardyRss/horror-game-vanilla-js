@@ -1,17 +1,20 @@
 //@ts-check
-/** @type {HTMLCanvasElement} */
-//@ts-ignore
-const canvas = document.getElementById("game-canvas");
-const ctx = canvas.getContext("2d");
-canvas.width = 800;
-canvas.height = 600;
+import { GameObject } from "./game-objects/game-object.js";
+import { canvas, ctx } from "./canvas.js";
 
-class Player {
+// /** @type {HTMLCanvasElement} */
+// //@ts-ignore
+// const canvas = document.getElementById("game-canvas");
+// const ctx = canvas.getContext("2d");
+// canvas.width = 800;
+// canvas.height = 600;
+
+class Player extends GameObject {
 	constructor() {
-		this.width = 32;
-		this.height = 32;
+		super(32, 32);
 		this.x = canvas.width / 2 - this.width / 2;
 		this.y = canvas.height / 2 - this.height / 2;
+		this.fillStyle = "green";
 
 		this.isMovingUp = false;
 		this.isMovingDown = false;
@@ -103,23 +106,15 @@ class Player {
 		if (this.y <= 0) {
 			this.y = 0;
 		}
-	}
 
-	render() {
-		ctx.save();
-		ctx.fillStyle = "green";
-		ctx.fillRect(this.x, this.y, this.width, this.height);
-		ctx.restore();
+		//barr;
 	}
 }
 
-class Monster {
+class Monster extends GameObject {
 	constructor() {
-		this.width = 32;
-		this.height = 32;
-		this.x = 0;
-		this.y = 0;
-
+		super(32, 32);
+		this.fillStyle = "red";
 		this.baseSpeed = 3;
 
 		this.movement = {
@@ -167,19 +162,41 @@ class Monster {
 		this.x += this.movement.x.speed * this.movement.x.direction;
 		this.y += this.movement.y.speed * this.movement.y.direction;
 	}
+}
 
-	render() {
-		ctx.save();
-		ctx.fillStyle = "red";
-		ctx.fillRect(this.x, this.y, this.width, this.height);
-		ctx.restore();
+class Barrier extends GameObject {
+	constructor(x, y, w, h) {
+		super(w, h);
+		this.x = x;
+		this.y = y;
+		this.fillStyle = "black";
 	}
 }
+
+class Game {
+	/**
+	 * @param {(Barrier | Player | Monster)[]} gameObjects
+	 */
+	constructor(gameObjects) {
+		this.gameObjects = gameObjects;
+	}
+
+	checkForCollisions() {
+		this.gameObjects.forEach((o) => {
+			console.log(typeof o);
+		});
+	}
+}
+
+let b1 = new Barrier(600, 300, 32, 32 * 3);
+let barriers = [b1];
 
 let player = new Player();
 let m1 = new Monster();
 
-let gameObjects = [player, m1];
+let gameObjects = [player, m1, ...barriers];
+
+let game = new Game(gameObjects);
 
 let currentTime = 0;
 let lastMonsterAdded = 0;
@@ -193,11 +210,13 @@ function gameLoop(timestamp) {
 	let elapsedTime = Math.floor(timestamp - currentTime);
 	currentTime = timestamp;
 
-	lastMonsterAdded += elapsedTime;
-	if (lastMonsterAdded >= monsterSpawnRate) {
-		gameObjects.push(new Monster());
-		lastMonsterAdded = 0;
-	}
+	// lastMonsterAdded += elapsedTime;
+	// if (lastMonsterAdded >= monsterSpawnRate) {
+	// 	gameObjects.push(new Monster());
+	// 	lastMonsterAdded = 0;
+	// }
+
+	game.checkForCollisions();
 
 	gameObjects.forEach((o) => {
 		o.update(elapsedTime);
