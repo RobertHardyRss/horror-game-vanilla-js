@@ -2,6 +2,10 @@
 import { ctx } from "../canvas.js";
 
 export class GameObject {
+	/**
+	 * @param {number} w
+	 * @param {number} h
+	 */
 	constructor(w, h) {
 		this.x = 0;
 		this.y = 0;
@@ -10,6 +14,9 @@ export class GameObject {
 		this.fillStyle = "";
 	}
 
+	/**
+	 * @param {number} elapsedTime
+	 */
 	update(elapsedTime) {}
 	render() {
 		ctx.save();
@@ -38,6 +45,12 @@ export class GameObject {
 }
 
 class ObjectBounds {
+	/**
+	 * @param {number} x
+	 * @param {number} y
+	 * @param {number} w
+	 * @param {number} h
+	 */
 	constructor(x, y, w, h) {
 		this.top = y;
 		this.bottom = y + h;

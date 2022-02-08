@@ -1,4 +1,5 @@
 //@ts-check
+import { Barrier } from "./game-objects/barrier.js";
 import { GameObject } from "./game-objects/game-object.js";
 import { canvas, ctx } from "./canvas.js";
 import { level1 } from "./levels.js";
@@ -18,8 +19,8 @@ class Player extends GameObject {
 		this.isRunning = false;
 
 		this.baseSpeed = 3;
-		this.barriers = barriers;
-
+		/** @type {GameObject[]} */
+		this.barriers;
 		this.wireUpEvents();
 	}
 
@@ -126,8 +127,12 @@ class Player extends GameObject {
 class Monster extends GameObject {
 	constructor(barriers, x, y) {
 		super(32, 32);
+		this.x = x;
+		this.y = y;
 		this.fillStyle = "red";
-		this.baseSpeed = 3;
+		this.baseSpeed = 2;
+		/** @type {GameObject[]} */
+		this.barriers;
 
 		this.x = x;
 		this.y = y;
@@ -163,18 +168,12 @@ class Monster extends GameObject {
 			this.movement.timeSinceLastUpdate = 0;
 		}
 
-		if (this.x + this.width >= canvas.width) {
-			this.movement.x.direction = -1;
-		}
-		if (this.x <= 0) {
-			this.movement.x.direction = 1;
-		}
-		if (this.y + this.height >= canvas.height) {
-			this.movement.y.direction = -1;
-		}
-		if (this.y <= 0) {
-			this.movement.y.direction = 1;
-		}
+		barriers.forEach((b) => {
+			if (this.isColliding(b)) {
+				this.movement.x.direction *= -1;
+				this.movement.y.direction *= -1;
+			}
+		});
 
 		this.barriers.forEach((b) => {
 			if (this.isColliding(b)) {
@@ -185,15 +184,6 @@ class Monster extends GameObject {
 
 		this.x += this.movement.x.speed * this.movement.x.direction;
 		this.y += this.movement.y.speed * this.movement.y.direction;
-	}
-}
-
-class Barrier extends GameObject {
-	constructor(x, y, w, h) {
-		super(w, h);
-		this.x = x;
-		this.y = y;
-		this.fillStyle = "black";
 	}
 }
 
