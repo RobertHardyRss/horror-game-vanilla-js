@@ -10,7 +10,7 @@ import { canvas, ctx } from "./canvas.js";
 // canvas.height = 600;
 
 class Player extends GameObject {
-	constructor() {
+	constructor(barriers) {
 		super(32, 32);
 		this.x = canvas.width / 2 - this.width / 2;
 		this.y = canvas.height / 2 - this.height / 2;
@@ -24,6 +24,7 @@ class Player extends GameObject {
 		this.isRunning = false;
 
 		this.baseSpeed = 3;
+		this.barriers = barriers;
 
 		this.wireUpEvents();
 	}
@@ -107,7 +108,23 @@ class Player extends GameObject {
 			this.y = 0;
 		}
 
-		//barr;
+		this.barriers.forEach((b) => {
+			if (this.isColliding(b)) {
+				let bounds = b.getBounds();
+
+				if (this.isMovingDown) {
+					this.y = bounds.top - this.height;
+				} else if (this.isMovingUp) {
+					this.y = bounds.bottom;
+				}
+
+				if (this.isMovingRight) {
+					this.x = bounds.left - this.width;
+				} else if (this.isMovingLeft) {
+					this.x = bounds.right;
+				}
+			}
+		});
 	}
 }
 
@@ -191,7 +208,7 @@ class Game {
 let b1 = new Barrier(600, 300, 32, 32 * 3);
 let barriers = [b1];
 
-let player = new Player();
+let player = new Player(barriers);
 let m1 = new Monster();
 
 let gameObjects = [player, m1, ...barriers];
