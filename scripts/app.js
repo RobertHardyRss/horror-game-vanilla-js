@@ -1,13 +1,7 @@
 //@ts-check
 import { GameObject } from "./game-objects/game-object.js";
 import { canvas, ctx } from "./canvas.js";
-
-// /** @type {HTMLCanvasElement} */
-// //@ts-ignore
-// const canvas = document.getElementById("game-canvas");
-// const ctx = canvas.getContext("2d");
-// canvas.width = 800;
-// canvas.height = 600;
+import { level1 } from "./levels.js";
 
 class Player extends GameObject {
 	constructor(barriers) {
@@ -112,6 +106,7 @@ class Player extends GameObject {
 			if (this.isColliding(b)) {
 				let bounds = b.getBounds();
 
+				// there's a bug when pressing multiple keys.  Fix this later.
 				if (this.isMovingDown) {
 					this.y = bounds.top - this.height;
 				} else if (this.isMovingUp) {
@@ -129,10 +124,12 @@ class Player extends GameObject {
 }
 
 class Monster extends GameObject {
-	constructor() {
+	constructor(barriers) {
 		super(32, 32);
 		this.fillStyle = "red";
 		this.baseSpeed = 3;
+
+		this.barriers = barriers;
 
 		this.movement = {
 			timeSinceLastUpdate: 0,
@@ -176,6 +173,13 @@ class Monster extends GameObject {
 			this.movement.y.direction = 1;
 		}
 
+		this.barriers.forEach((b) => {
+			if (this.isColliding(b)) {
+				this.movement.x.direction *= -1;
+				this.movement.y.direction *= -1;
+			}
+		});
+
 		this.x += this.movement.x.speed * this.movement.x.direction;
 		this.y += this.movement.y.speed * this.movement.y.direction;
 	}
@@ -190,30 +194,54 @@ class Barrier extends GameObject {
 	}
 }
 
+
 class Game {
-	/**
-	 * @param {(Barrier | Player | Monster)[]} gameObjects
-	 */
-	constructor(gameObjects) {
-		this.gameObjects = gameObjects;
+	constructor() {
+
 	}
 
-	checkForCollisions() {
-		this.gameObjects.forEach((o) => {
-			console.log(typeof o);
+	/**
+	 * @param {string[]} level
+	 */
+	loadLevel(level){
+		let barriers = [];
+		let monster = [];
+		let player;
+
+		level.forEach((row, idx) => {
+			for (let col = 0; col < row.length; col++) {
+				let x = col * 16;
+				let y = idx * 16;
+
+				switch(row[col]) {
+					case "w":
+						barriers.push(new Barrier(x, y, 16, 16));
+						break;
+					case "m":
+						monster.push(new Monster(null));
+						break;
+					case "p":
+						player = new Player(null);
+						player.x = x;
+						player.y = y;
+
+				}
+				
+			}
 		});
 	}
 }
+
 
 let b1 = new Barrier(600, 300, 32, 32 * 3);
 let barriers = [b1];
 
 let player = new Player(barriers);
-let m1 = new Monster();
+let m1 = new Monster(barriers);
 
 let gameObjects = [player, m1, ...barriers];
 
-let game = new Game(gameObjects);
+
 
 let currentTime = 0;
 let lastMonsterAdded = 0;
@@ -229,11 +257,9 @@ function gameLoop(timestamp) {
 
 	// lastMonsterAdded += elapsedTime;
 	// if (lastMonsterAdded >= monsterSpawnRate) {
-	// 	gameObjects.push(new Monster());
+	// 	gameObjects.push(new Monster(barriers));
 	// 	lastMonsterAdded = 0;
 	// }
-
-	game.checkForCollisions();
 
 	gameObjects.forEach((o) => {
 		o.update(elapsedTime);
