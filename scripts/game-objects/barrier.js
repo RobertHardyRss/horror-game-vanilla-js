@@ -5,6 +5,6 @@ export class Barrier extends GameObject {
 		super(16, 16);
 		this.x = x;
 		this.y = y;
-		this.fillStyle = "black";
+		this.fillStyle = "grey";
 	}
 }
