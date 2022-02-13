@@ -4,10 +4,10 @@ import { canvas, ctx } from "./canvas.js";
 import { level1 } from "./levels.js";
 
 class Player extends GameObject {
-	constructor(barriers) {
+	constructor(barriers, x, y) {
 		super(32, 32);
-		this.x = canvas.width / 2 - this.width / 2;
-		this.y = canvas.height / 2 - this.height / 2;
+		this.x = x;
+		this.y = y;
 		this.fillStyle = "green";
 
 		this.isMovingUp = false;
@@ -124,10 +124,13 @@ class Player extends GameObject {
 }
 
 class Monster extends GameObject {
-	constructor(barriers) {
+	constructor(barriers, x, y) {
 		super(32, 32);
 		this.fillStyle = "red";
 		this.baseSpeed = 3;
+
+		this.x = x;
+		this.y = y;
 
 		this.barriers = barriers;
 
@@ -194,54 +197,61 @@ class Barrier extends GameObject {
 	}
 }
 
-
 class Game {
-	constructor() {
-
-	}
+	constructor() {}
 
 	/**
 	 * @param {string[]} level
 	 */
-	loadLevel(level){
+	loadLevel(level) {
 		let barriers = [];
 		let monster = [];
+		let monsterCoords = [];
 		let player;
+		let playerCoords = { x: 0, y: 0 };
 
 		level.forEach((row, idx) => {
 			for (let col = 0; col < row.length; col++) {
 				let x = col * 16;
 				let y = idx * 16;
 
-				switch(row[col]) {
+				switch (row[col]) {
 					case "w":
 						barriers.push(new Barrier(x, y, 16, 16));
 						break;
 					case "m":
-						monster.push(new Monster(null));
+						// set x and y properties for monster
+						monsterCoords.push({ x: x, y: y });
 						break;
 					case "p":
-						player = new Player(null);
-						player.x = x;
-						player.y = y;
-
+						// set x and y coordinates for player
+						playerCoords = { x: x, y: y };
+						break;
 				}
-				
 			}
 		});
+
+		monsterCoords.forEach((c) => {
+			monster.push(new Monster(barriers, c.x, c.y));
+		});
+
+		player = new Player(barriers, playerCoords.x, playerCoords.y);
+
+		return { player: player, monsters: monster, barriers: barriers };
 	}
 }
 
+let game = new Game();
 
-let b1 = new Barrier(600, 300, 32, 32 * 3);
-let barriers = [b1];
+let { player, monsters, barriers } = game.loadLevel(level1);
 
-let player = new Player(barriers);
-let m1 = new Monster(barriers);
+// let b1 = new Barrier(600, 300, 32, 32 * 3);
+// let barriers = [b1];
 
-let gameObjects = [player, m1, ...barriers];
+// let player = new Player(barriers);
+// let m1 = new Monster(barriers);
 
-
+let gameObjects = [player, ...monsters, ...barriers];
 
 let currentTime = 0;
 let lastMonsterAdded = 0;
