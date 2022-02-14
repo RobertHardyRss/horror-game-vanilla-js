@@ -5,6 +5,7 @@ import { Player } from "./game-objects/player.js";
 
 import { canvas, ctx } from "./canvas.js";
 import { level1, level2, levelTest } from "./levels.js";
+import { StartGameButton } from "./ui-elements/start-button.js";
 
 class Game {
 	constructor() {}
@@ -59,6 +60,9 @@ let currentTime = 0;
 let lastMonsterAdded = 0;
 const monsterSpawnRate = 1000;
 
+let startButton = new StartGameButton();
+startButton.render();
+
 function gameLoop(timestamp) {
 	// clear off the canvas
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -80,4 +84,4 @@ function gameLoop(timestamp) {
 	requestAnimationFrame(gameLoop);
 }
 
-requestAnimationFrame(gameLoop);
+//requestAnimationFrame(gameLoop);
