@@ -1,5 +1,5 @@
 //@ts-check
-import { GameObject } from "./game-objects/game-object.js";
+import { GameObject, Location } from "./game-objects/game-object.js";
 import { canvas, ctx } from "./canvas.js";
 import { level1 } from "./levels.js";
 
@@ -131,6 +131,7 @@ class Monster extends GameObject {
 
 		this.x = x;
 		this.y = y;
+		this.lastLocation = new Location(this.x, this.y);
 
 		this.barriers = barriers;
 
@@ -163,28 +164,18 @@ class Monster extends GameObject {
 			this.movement.timeSinceLastUpdate = 0;
 		}
 
-		if (this.x + this.width >= canvas.width) {
-			this.movement.x.direction = -1;
-		}
-		if (this.x <= 0) {
-			this.movement.x.direction = 1;
-		}
-		if (this.y + this.height >= canvas.height) {
-			this.movement.y.direction = -1;
-		}
-		if (this.y <= 0) {
-			this.movement.y.direction = 1;
-		}
+		this.x += this.movement.x.speed * this.movement.x.direction;
+		this.y += this.movement.y.speed * this.movement.y.direction;
 
 		this.barriers.forEach((b) => {
-			if (this.isColliding(b)) {
-				this.movement.x.direction *= -1;
-				this.movement.y.direction *= -1;
+			let safeLocation = this.isColliding(b);
+			if (safeLocation) {
+				this.x = safeLocation.x;
+				this.y = safeLocation.y;
 			}
 		});
 
-		this.x += this.movement.x.speed * this.movement.x.direction;
-		this.y += this.movement.y.speed * this.movement.y.direction;
+		super.update(elapsedTime);
 	}
 }
 
