@@ -2,9 +2,9 @@
 import { ctx } from "../canvas.js";
 
 export class GameObject {
-	constructor(w, h) {
-		this.x = 0;
-		this.y = 0;
+	constructor(w, h, x, y) {
+		this.x = x;
+		this.y = y;
 		this.width = w;
 		this.height = h;
 		this.fillStyle = "";

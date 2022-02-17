@@ -4,10 +4,7 @@ import { canvas, ctx } from "../canvas.js";
 
 export class Player extends GameObject {
 	constructor(barriers, x, y) {
-		super(32, 32);
-		this.x = x;
-		this.y = y;
-		this.lastLocation = new Location(this.x, this.y);
+		super(32, 32, x, y);
 		this.fillStyle = "green";
 
 		this.isMovingUp = false;

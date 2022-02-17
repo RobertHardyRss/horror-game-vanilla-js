@@ -3,13 +3,10 @@ import { GameObject, Location } from "./game-object.js";
 
 export class Monster extends GameObject {
 	constructor(barriers, x, y) {
-		super(32, 32);
+		super(32, 32, x, y);
 		this.fillStyle = "red";
 		this.baseSpeed = 3;
 
-		this.x = x;
-		this.y = y;
-		this.lastLocation = new Location(this.x, this.y);
 		this.isLastMoveColliding = false;
 
 		this.barriers = barriers;

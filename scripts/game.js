@@ -1,5 +1,6 @@
 //@ts-check
 import { Barrier } from "./game-objects/barrier.js";
+import { Key } from "./game-objects/key.js";
 import { Monster } from "./game-objects/monster.js";
 import { Player } from "./game-objects/player.js";
 
@@ -15,6 +16,7 @@ export class Game {
 		let monsterCoords = [];
 		let player;
 		let playerCoords = { x: 0, y: 0 };
+		let keys = [];
 
 		level.forEach((row, idx) => {
 			for (let col = 0; col < row.length; col++) {
@@ -33,6 +35,9 @@ export class Game {
 						// set x and y coordinates for player
 						playerCoords = { x: x, y: y };
 						break;
+					case "k":
+						keys.push(new Key(x, y));
+						break;
 				}
 			}
 		});
@@ -43,6 +48,11 @@ export class Game {
 
 		player = new Player(barriers, playerCoords.x, playerCoords.y);
 
-		return { player: player, monsters: monster, barriers: barriers };
+		return {
+			player: player,
+			monsters: monster,
+			barriers: barriers,
+			keys: keys,
+		};
 	}
 }
