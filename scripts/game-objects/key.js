@@ -7,4 +7,11 @@ export class Key extends GameObject {
 		this.fillStyle = "yellow";
 		this.isPickedUp = false;
 	}
+
+	render() {
+		// if I am picked up, return and don't draw anything
+		if (this.isPickedUp) return;
+		// otherwise do the normal render
+		super.render();
+	}
 }
