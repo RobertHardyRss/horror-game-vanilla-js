@@ -108,6 +108,11 @@ export class Player extends GameObject {
 		}
 
 		this.game.barriers.forEach((b) => {
+			if (b.isOpen) return;
+
+			if (b.isLocked && this.inventory.length) {
+			}
+
 			let safeLocation = this.isColliding(b);
 			if (safeLocation) {
 				this.x = safeLocation.x;

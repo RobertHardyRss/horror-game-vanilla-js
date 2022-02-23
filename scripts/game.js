@@ -1,5 +1,6 @@
 //@ts-check
 import { Barrier } from "./game-objects/barrier.js";
+import { Door } from "./game-objects/door.js";
 import { Key } from "./game-objects/key.js";
 import { Monster } from "./game-objects/monster.js";
 import { Player } from "./game-objects/player.js";
@@ -16,12 +17,8 @@ export class Game {
 	 * @param {string[]} level
 	 */
 	loadLevel(level) {
-		// let barriers = [];
-		// let monster = [];
 		let monsterCoords = [];
-		// let player;
 		let playerCoords = { x: 0, y: 0 };
-		// let keys = [];
 
 		level.forEach((row, idx) => {
 			for (let col = 0; col < row.length; col++) {
@@ -42,6 +39,12 @@ export class Game {
 						break;
 					case "k":
 						this.keys.push(new Key(x, y));
+						break;
+					case "d":
+						this.barriers.push(new Door(x, y, true));
+						break;
+					case "D":
+						this.barriers.push(new Door(x, y, false));
 						break;
 				}
 			}

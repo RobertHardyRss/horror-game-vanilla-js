@@ -5,8 +5,14 @@ import { Game } from "./game.js";
 
 let game = new Game();
 
-let { player, monsters, barriers, keys } = game.loadLevel(level1);
-let gameObjects = [player, ...monsters, ...barriers, ...keys];
+game.loadLevel(level1);
+let gameObjects = [
+	game.player,
+	...game.monsters,
+	...game.barriers,
+	...game.keys,
+];
+
 let currentTime = 0;
 
 function gameLoop(timestamp) {

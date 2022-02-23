@@ -53,6 +53,8 @@ export class Monster extends GameObject {
 
 		this.isLastMoveColliding = false;
 		this.game.barriers.forEach((b) => {
+			if(b.isOpen) return;
+			
 			let safeLocation = this.isColliding(b);
 			if (safeLocation) {
 				this.isLastMoveColliding = true;
