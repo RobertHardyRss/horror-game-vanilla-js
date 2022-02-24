@@ -11,6 +11,7 @@ let gameObjects = [
 	...game.monsters,
 	...game.barriers,
 	...game.keys,
+	game.exitPortal,
 ];
 
 let currentTime = 0;
@@ -27,7 +28,8 @@ function gameLoop(timestamp) {
 		o.render();
 	});
 
-	requestAnimationFrame(gameLoop);
+	if (!game.isPlayerDead && !game.isLevelComplete)
+		requestAnimationFrame(gameLoop);
 }
 
 requestAnimationFrame(gameLoop);

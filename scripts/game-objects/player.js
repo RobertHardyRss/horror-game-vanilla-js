@@ -110,10 +110,18 @@ export class Player extends GameObject {
 		this.game.barriers.forEach((b) => {
 			if (b.isOpen) return;
 
-			if (b.isLocked && this.inventory.length) {
+			let safeLocation = this.isColliding(b);
+
+			if (safeLocation && b.isLocked && this.inventory.length) {
+				// removes the last key picked up
+				this.inventory.pop();
+				// unlock the door
+				b.isLocked = false;
+				b.isOpen = true;
+				// bail out
+				return;
 			}
 
-			let safeLocation = this.isColliding(b);
 			if (safeLocation) {
 				this.x = safeLocation.x;
 				this.y = safeLocation.y;

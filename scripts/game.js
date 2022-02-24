@@ -1,6 +1,7 @@
 //@ts-check
 import { Barrier } from "./game-objects/barrier.js";
 import { Door } from "./game-objects/door.js";
+import { ExitPortal } from "./game-objects/exit-portal.js";
 import { Key } from "./game-objects/key.js";
 import { Monster } from "./game-objects/monster.js";
 import { Player } from "./game-objects/player.js";
@@ -11,6 +12,10 @@ export class Game {
 		this.barriers = [];
 		this.monsters = [];
 		this.keys = [];
+		this.exitPortal = undefined;
+
+		this.isPlayerDead = false;
+		this.isLevelComplete = false;
 	}
 
 	/**
@@ -45,6 +50,9 @@ export class Game {
 						break;
 					case "D":
 						this.barriers.push(new Door(x, y, false));
+						break;
+					case "x":
+						this.exitPortal = new ExitPortal(x, y, this);
 						break;
 				}
 			}
