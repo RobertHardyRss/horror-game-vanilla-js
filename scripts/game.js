@@ -15,6 +15,7 @@ export class Game {
 		this.monsters = [];
 		this.keys = [];
 		this.exitPortal = undefined;
+		this.gameObjects = [];
 
 		this.isPlayerDead = false;
 		this.isLevelComplete = false;
@@ -26,37 +27,27 @@ export class Game {
 	}
 
 	start() {
-		this.loadLevel(this.levels[this.currentLevel]);
-		// requestAnimationFrame(this.gameLoop);
+		this.loadLevel();
+		requestAnimationFrame(gameLoop);
 	}
 
-	// gameLoop(timestamp) {
-	// 	console.log(this);
-	// 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	// 	let gameObjects = [
-	// 		this.player,
-	// 		...this.monsters,
-	// 		...this.barriers,
-	// 		...this.keys,
-	// 		this.exitPortal,
-	// 	];
+	nextLevel() {
+		// re-init game stuff
+		this.player = undefined;
+		this.barriers = [];
+		this.monsters = [];
+		this.keys = [];
+		this.exitPortal = undefined;
+		this.gameObjects = [];
 
-	// 	let elapsedTime = Math.floor(timestamp - this.currentTime);
-	// 	this.currentTime = timestamp;
+		this.isLevelComplete = false;
+		this.currentLevel++;
+		this.loadLevel();
+	}
 
-	// 	gameObjects.forEach((o) => {
-	// 		o.update(elapsedTime);
-	// 		o.render();
-	// 	});
+	loadLevel() {
+		let level = this.levels[this.currentLevel];
 
-	// 	if (!this.isPlayerDead && !this.isLevelComplete)
-	// 		requestAnimationFrame(this.gameLoop);
-	// }
-
-	/**
-	 * @param {string[]} level
-	 */
-	loadLevel(level) {
 		let monsterCoords = [];
 		let playerCoords = { x: 0, y: 0 };
 
@@ -99,11 +90,35 @@ export class Game {
 
 		this.player = new Player(this, playerCoords.x, playerCoords.y);
 
-		return {
-			player: this.player,
-			monsters: this.monsters,
-			barriers: this.barriers,
-			keys: this.keys,
-		};
+		this.gameObjects = [
+			game.player,
+			...game.monsters,
+			...game.barriers,
+			...game.keys,
+			game.exitPortal,
+		];
 	}
+}
+
+export let game = new Game();
+
+function gameLoop(timestamp) {
+	// console.log(this);
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	if (game.isLevelComplete) {
+		game.nextLevel();
+	}
+	if (game.isPlayerDead) {
+		return;
+	}
+
+	let elapsedTime = Math.floor(timestamp - game.currentTime);
+	game.currentTime = timestamp;
+
+	game.gameObjects.forEach((o) => {
+		o.update(elapsedTime);
+		o.render();
+	});
+
+	requestAnimationFrame(gameLoop);
 }
