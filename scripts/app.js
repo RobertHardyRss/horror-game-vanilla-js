@@ -4,24 +4,21 @@ import { level1 } from "./levels.js";
 import { Game } from "./game.js";
 
 let game = new Game();
-
-game.loadLevel(level1);
-let gameObjects = [
-	game.player,
-	...game.monsters,
-	...game.barriers,
-	...game.keys,
-	game.exitPortal,
-];
-
-let currentTime = 0;
+game.start();
 
 function gameLoop(timestamp) {
-	// clear off the canvas
+	// console.log(this);
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	let gameObjects = [
+		game.player,
+		...game.monsters,
+		...game.barriers,
+		...game.keys,
+		game.exitPortal,
+	];
 
-	let elapsedTime = Math.floor(timestamp - currentTime);
-	currentTime = timestamp;
+	let elapsedTime = Math.floor(timestamp - game.currentTime);
+	game.currentTime = timestamp;
 
 	gameObjects.forEach((o) => {
 		o.update(elapsedTime);

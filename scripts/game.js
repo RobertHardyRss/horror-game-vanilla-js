@@ -1,10 +1,12 @@
 //@ts-check
+import { canvas, ctx } from "./canvas.js";
 import { Barrier } from "./game-objects/barrier.js";
 import { Door } from "./game-objects/door.js";
 import { ExitPortal } from "./game-objects/exit-portal.js";
 import { Key } from "./game-objects/key.js";
 import { Monster } from "./game-objects/monster.js";
 import { Player } from "./game-objects/player.js";
+import { level1, level2 } from "./levels.js";
 
 export class Game {
 	constructor() {
@@ -16,7 +18,40 @@ export class Game {
 
 		this.isPlayerDead = false;
 		this.isLevelComplete = false;
+
+		this.levels = [level1, level2];
+		this.currentLevel = 0;
+
+		this.currentTime = 0;
 	}
+
+	start() {
+		this.loadLevel(this.levels[this.currentLevel]);
+		// requestAnimationFrame(this.gameLoop);
+	}
+
+	// gameLoop(timestamp) {
+	// 	console.log(this);
+	// 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	// 	let gameObjects = [
+	// 		this.player,
+	// 		...this.monsters,
+	// 		...this.barriers,
+	// 		...this.keys,
+	// 		this.exitPortal,
+	// 	];
+
+	// 	let elapsedTime = Math.floor(timestamp - this.currentTime);
+	// 	this.currentTime = timestamp;
+
+	// 	gameObjects.forEach((o) => {
+	// 		o.update(elapsedTime);
+	// 		o.render();
+	// 	});
+
+	// 	if (!this.isPlayerDead && !this.isLevelComplete)
+	// 		requestAnimationFrame(this.gameLoop);
+	// }
 
 	/**
 	 * @param {string[]} level
