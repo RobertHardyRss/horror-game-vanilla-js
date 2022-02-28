@@ -1,10 +1,9 @@
 //@ts-check
-
 import { canvas, ctx } from "../canvas.js";
 import { Game } from "../game.js";
 import { GameObject } from "../game-objects/game-object.js";
 
-export class GameOverScene extends GameObject {
+export class GameWonScene extends GameObject {
 	/**
 	 * @param {Game} game
 	 */
@@ -13,14 +12,13 @@ export class GameOverScene extends GameObject {
 		this.game = game;
 
 		this.fillGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-		this.fillGradient.addColorStop(0, "red");
-		this.fillGradient.addColorStop(0.6, "maroon");
+		this.fillGradient.addColorStop(0, "green");
 		this.fillGradient.addColorStop(1, "black");
 		this.fillStyle = this.fillGradient;
 
 		this.textGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-		this.textGradient.addColorStop(0, "green");
-		this.textGradient.addColorStop(1, "purple");
+		this.textGradient.addColorStop(0, "yellow");
+		this.textGradient.addColorStop(1, "navy");
 
 		canvas.addEventListener(
 			"click",
@@ -45,8 +43,8 @@ export class GameOverScene extends GameObject {
 		ctx.textAlign = "center";
 		ctx.textBaseline = "middle";
 
-		ctx.fillText("You Died!", cx, cy - 150);
-		ctx.strokeText("You Died!", cx, cy - 150);
+		ctx.fillText("You Won!", cx, cy - 150);
+		ctx.strokeText("You Won!", cx, cy - 150);
 
 		ctx.font = "60px zombiecontrol";
 		ctx.fillText(`levels completed: ${this.game.currentLevel}`, cx, cy);

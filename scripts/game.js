@@ -9,6 +9,8 @@ import { Player } from "./game-objects/player.js";
 import { level1, level2 } from "./levels.js";
 import { GameOverScene } from "./scenes/game-over.js";
 import { StartScene } from "./scenes/start.js";
+import { GameWonScene } from "./scenes/game-won.js";
+import { AudioPlayer } from "./audio.js";
 
 export class Game {
 	constructor() {
@@ -26,24 +28,17 @@ export class Game {
 		this.currentLevel = 0;
 
 		this.currentTime = 0;
+
+		this.audioPlayer = new AudioPlayer();
 	}
 
 	init() {
-		let start = new StartScene(this);
-		this.gameObjects.push(start);
+		let startScene = new StartScene(this);
+		this.gameObjects.push(startScene);
 		requestAnimationFrame(gameLoop);
 	}
 
-	start() {
-		this.loadLevel();
-	}
-
-	gameOverLose() {
-		let gameOver = new GameOverScene(this);
-		this.gameObjects = [gameOver];
-	}
-
-	nextLevel() {
+	resetGame() {
 		// re-init game stuff
 		this.player = undefined;
 		this.barriers = [];
@@ -52,9 +47,43 @@ export class Game {
 		this.exitPortal = undefined;
 		this.gameObjects = [];
 
+		this.isPlayerDead = false;
 		this.isLevelComplete = false;
-		this.currentLevel++;
+	}
+
+	start() {
+		this.audioPlayer.init();
+		this.audioPlayer.playMusic();
+		this.currentLevel = 0;
 		this.loadLevel();
+	}
+
+	restart() {
+		this.resetGame();
+		this.start();
+	}
+
+	nextLevel() {
+		this.resetGame();
+		this.currentLevel++;
+		if (this.currentLevel < this.levels.length) {
+			this.audioPlayer.exitPortal();
+			this.loadLevel();
+		} else {
+			this.gameOverWin();
+		}
+	}
+
+	gameOver() {
+		this.resetGame();
+		this.audioPlayer.playerDeath();
+		this.gameObjects.push(new GameOverScene(this));
+	}
+
+	gameOverWin() {
+		this.resetGame();
+		this.audioPlayer.playerWin();
+		this.gameObjects.push(new GameWonScene(this));
 	}
 
 	loadLevel() {
@@ -121,7 +150,7 @@ function gameLoop(timestamp) {
 		game.nextLevel();
 	}
 	if (game.isPlayerDead) {
-		game.gameOverLose();
+		return;
 	}
 
 	let elapsedTime = Math.floor(timestamp - game.currentTime);

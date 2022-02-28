@@ -116,6 +116,7 @@ export class Player extends GameObject {
 				// removes the last key picked up
 				this.inventory.pop();
 				// unlock the door
+				this.game.audioPlayer.openDoor();
 				b.isLocked = false;
 				b.isOpen = true;
 				// bail out
@@ -132,6 +133,7 @@ export class Player extends GameObject {
 			.filter((k) => !k.isPickedUp)
 			.forEach((k) => {
 				if (this.isColliding(k)) {
+					this.game.audioPlayer.pickupKey();
 					this.inventory.push(k);
 					k.isPickedUp = true;
 				}
