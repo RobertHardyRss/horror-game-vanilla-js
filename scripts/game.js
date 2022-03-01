@@ -7,6 +7,7 @@ import { Key } from "./game-objects/key.js";
 import { Monster } from "./game-objects/monster.js";
 import { Player } from "./game-objects/player.js";
 import { level1, level2 } from "./levels.js";
+import { GameOverScene } from "./scenes/game-over.js";
 import { StartScene } from "./scenes/start.js";
 
 export class Game {
@@ -35,6 +36,11 @@ export class Game {
 
 	start() {
 		this.loadLevel();
+	}
+
+	gameOverLose() {
+		let gameOver = new GameOverScene(this);
+		this.gameObjects = [gameOver];
 	}
 
 	nextLevel() {
@@ -115,7 +121,7 @@ function gameLoop(timestamp) {
 		game.nextLevel();
 	}
 	if (game.isPlayerDead) {
-		return;
+		game.gameOverLose();
 	}
 
 	let elapsedTime = Math.floor(timestamp - game.currentTime);
