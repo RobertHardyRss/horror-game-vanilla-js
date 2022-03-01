@@ -7,6 +7,7 @@ import { Key } from "./game-objects/key.js";
 import { Monster } from "./game-objects/monster.js";
 import { Player } from "./game-objects/player.js";
 import { level1, level2 } from "./levels.js";
+import { StartScene } from "./scenes/start.js";
 
 export class Game {
 	constructor() {
@@ -26,9 +27,14 @@ export class Game {
 		this.currentTime = 0;
 	}
 
+	init() {
+		let start = new StartScene(this);
+		this.gameObjects.push(start);
+		requestAnimationFrame(gameLoop);
+	}
+
 	start() {
 		this.loadLevel();
-		requestAnimationFrame(gameLoop);
 	}
 
 	nextLevel() {
