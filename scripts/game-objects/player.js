@@ -132,6 +132,7 @@ export class Player extends GameObject {
 			.filter((k) => !k.isPickedUp)
 			.forEach((k) => {
 				if (this.isColliding(k)) {
+					this.game.audioPlayer.pickupKey();
 					this.inventory.push(k);
 					k.isPickedUp = true;
 				}

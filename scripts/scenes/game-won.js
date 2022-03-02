@@ -4,19 +4,19 @@ import { canvas, ctx } from "../canvas.js";
 import { Game } from "../game.js";
 import { GameObject } from "../game-objects/game-object.js";
 
-export class GameOverScene extends GameObject {
+export class GameWonScene extends GameObject {
 	/**
 	 * @param {Game} game
 	 */
 	constructor(game) {
 		super(canvas.width, canvas.height, 0, 0);
 		this.fillStyle = ctx.createLinearGradient(0, 0, 0, canvas.height);
-		this.fillStyle.addColorStop(0, "red");
+		this.fillStyle.addColorStop(0, "green");
 		this.fillStyle.addColorStop(1, "black");
 
 		this.textGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
 		this.textGradient.addColorStop(0, "yellow");
-		this.textGradient.addColorStop(1, "purple");
+		this.textGradient.addColorStop(1, "blue");
 
 		this.game = game;
 
@@ -38,18 +38,18 @@ export class GameOverScene extends GameObject {
 		ctx.textBaseline = "middle";
 
 		ctx.font = "150px zombiecontrol";
-		ctx.fillText("You Died!", canvas.width / 2, 100);
+		ctx.fillText("You Won!", canvas.width / 2, 100);
 
 		ctx.font = "60px zombiecontrol";
 		ctx.fillText(
-			`You complete ${this.game.currentLevel} levels`,
+			`You completed ${this.game.currentLevel} levels`,
 			canvas.width / 2,
 			canvas.height / 2
 		);
 
 		ctx.font = "80px zombiecontrol";
 		ctx.fillText(
-			"Click to try again",
+			"Click to play again!",
 			canvas.width / 2,
 			canvas.height - 60
 		);

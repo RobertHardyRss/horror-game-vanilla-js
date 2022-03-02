@@ -1,4 +1,5 @@
 //@ts-check
+import { AudioPlayer } from "./audio-player.js";
 import { canvas, ctx } from "./canvas.js";
 import { Barrier } from "./game-objects/barrier.js";
 import { Door } from "./game-objects/door.js";
@@ -8,6 +9,7 @@ import { Monster } from "./game-objects/monster.js";
 import { Player } from "./game-objects/player.js";
 import { level1, level2 } from "./levels.js";
 import { GameOverScene } from "./scenes/game-over.js";
+import { GameWonScene } from "./scenes/game-won.js";
 import { StartScene } from "./scenes/start.js";
 
 export class Game {
@@ -26,6 +28,8 @@ export class Game {
 		this.currentLevel = 0;
 
 		this.currentTime = 0;
+
+		this.audioPlayer = new AudioPlayer();
 	}
 
 	init() {
@@ -34,16 +38,7 @@ export class Game {
 		requestAnimationFrame(gameLoop);
 	}
 
-	start() {
-		this.loadLevel();
-	}
-
-	gameOverLose() {
-		let gameOver = new GameOverScene(this);
-		this.gameObjects = [gameOver];
-	}
-
-	nextLevel() {
+	resetGame() {
 		// re-init game stuff
 		this.player = undefined;
 		this.barriers = [];
@@ -52,9 +47,43 @@ export class Game {
 		this.exitPortal = undefined;
 		this.gameObjects = [];
 
+		this.isPlayerDead = false;
 		this.isLevelComplete = false;
-		this.currentLevel++;
+	}
+
+	start() {
+		this.audioPlayer.init();
+		this.currentLevel = 0;
 		this.loadLevel();
+	}
+
+	restart() {
+		this.resetGame();
+		this.start();
+	}
+
+	gameOverLose() {
+		this.resetGame();
+		let gameOver = new GameOverScene(this);
+		this.gameObjects = [gameOver];
+	}
+
+	gameOverWin() {
+		this.resetGame();
+		let win = new GameWonScene(this);
+		this.gameObjects = [win];
+	}
+
+	nextLevel() {
+		this.resetGame();
+		this.currentLevel++;
+
+		if(this.currentLevel < this.levels.length) {
+			this.loadLevel();
+		} else {
+			this.gameOverWin();
+		}
+		
 	}
 
 	loadLevel() {
