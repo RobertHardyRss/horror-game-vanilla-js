@@ -82,6 +82,7 @@ export class Game {
 
 	gameOverWin() {
 		this.resetGame();
+		this.audioPlayer.stopMusic();
 		this.audioPlayer.playerWin();
 		this.gameObjects.push(new GameWonScene(this));
 	}
@@ -150,7 +151,7 @@ function gameLoop(timestamp) {
 		game.nextLevel();
 	}
 	if (game.isPlayerDead) {
-		return;
+		game.gameOver();
 	}
 
 	let elapsedTime = Math.floor(timestamp - game.currentTime);

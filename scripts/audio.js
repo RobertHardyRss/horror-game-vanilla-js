@@ -67,6 +67,13 @@ export class AudioPlayer {
 		this.wireUpNextMusicLoop(this.musicLoopsBuildup[this.currentMusicLoop]);
 	}
 
+	stopMusic() {
+		this.musicLoopsBuildup.forEach((m) => {
+			m.pause();
+			m.currentTime = 0;
+		});
+	}
+
 	/** @param {HTMLAudioElement} audioElement */
 	wireUpNextMusicLoop(audioElement) {
 		audioElement.addEventListener(
@@ -98,12 +105,12 @@ export class AudioPlayer {
 	}
 
 	playerDeath() {
-		this.playMusic();
+		this.stopMusic();
 		playerDeath.play();
 	}
 
 	playerWin() {
-		this.playMusic();
+		this.stopMusic();
 		playerWin.play();
 	}
 }
