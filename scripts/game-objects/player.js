@@ -113,6 +113,7 @@ export class Player extends GameObject {
 			let safeLocation = this.isColliding(b);
 
 			if (safeLocation && b.isLocked && this.inventory.length) {
+				this.game.audioPlayer.openDoor();
 				// removes the last key picked up
 				this.inventory.pop();
 				// unlock the door

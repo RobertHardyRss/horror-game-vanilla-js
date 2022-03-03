@@ -53,6 +53,7 @@ export class Game {
 
 	start() {
 		this.audioPlayer.init();
+		this.audioPlayer.playMusic();
 		this.currentLevel = 0;
 		this.loadLevel();
 	}
@@ -64,12 +65,14 @@ export class Game {
 
 	gameOverLose() {
 		this.resetGame();
+		this.audioPlayer.loseGame();
 		let gameOver = new GameOverScene(this);
 		this.gameObjects = [gameOver];
 	}
 
 	gameOverWin() {
 		this.resetGame();
+		this.audioPlayer.winGame();
 		let win = new GameWonScene(this);
 		this.gameObjects = [win];
 	}
@@ -78,7 +81,8 @@ export class Game {
 		this.resetGame();
 		this.currentLevel++;
 
-		if(this.currentLevel < this.levels.length) {
+		if (this.currentLevel < this.levels.length) {
+			this.audioPlayer.exitPortal();
 			this.loadLevel();
 		} else {
 			this.gameOverWin();
