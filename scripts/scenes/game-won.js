@@ -15,8 +15,11 @@ export class GameWonScene extends GameObject {
 		this.fillStyle.addColorStop(1, "black");
 
 		this.textGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-		this.textGradient.addColorStop(0, "yellow");
-		this.textGradient.addColorStop(1, "blue");
+		this.textGradient.addColorStop(0, "gold");
+		this.textGradient.addColorStop(0.4, "purple");
+		this.textGradient.addColorStop(0.5, "gold");
+		this.textGradient.addColorStop(0.8, "green");
+		this.textGradient.addColorStop(1, "purple");
 
 		this.game = game;
 
@@ -37,8 +40,8 @@ export class GameWonScene extends GameObject {
 		ctx.textAlign = "center";
 		ctx.textBaseline = "middle";
 
-		ctx.font = "150px zombiecontrol";
-		ctx.fillText("You Won!", canvas.width / 2, 100);
+		ctx.font = "180px zombiecontrol";
+		ctx.fillText("You Won!", canvas.width / 2, 150);
 
 		ctx.font = "60px zombiecontrol";
 		ctx.fillText(

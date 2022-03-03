@@ -12,10 +12,13 @@ export class GameOverScene extends GameObject {
 		super(canvas.width, canvas.height, 0, 0);
 		this.fillStyle = ctx.createLinearGradient(0, 0, 0, canvas.height);
 		this.fillStyle.addColorStop(0, "red");
-		this.fillStyle.addColorStop(1, "black");
+		this.fillStyle.addColorStop(0.9, "black");
 
 		this.textGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-		this.textGradient.addColorStop(0, "yellow");
+		this.textGradient.addColorStop(0, "green");
+		this.textGradient.addColorStop(0.2, "green");
+		this.textGradient.addColorStop(0.5, "yellow");
+		this.textGradient.addColorStop(0.8, "green");
 		this.textGradient.addColorStop(1, "purple");
 
 		this.game = game;
@@ -37,8 +40,8 @@ export class GameOverScene extends GameObject {
 		ctx.textAlign = "center";
 		ctx.textBaseline = "middle";
 
-		ctx.font = "150px zombiecontrol";
-		ctx.fillText("You Died!", canvas.width / 2, 100);
+		ctx.font = "180px zombiecontrol";
+		ctx.fillText("You Died!", canvas.width / 2, 150);
 
 		ctx.font = "60px zombiecontrol";
 		ctx.fillText(

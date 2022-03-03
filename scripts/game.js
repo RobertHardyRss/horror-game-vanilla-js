@@ -83,7 +83,6 @@ export class Game {
 		} else {
 			this.gameOverWin();
 		}
-		
 	}
 
 	loadLevel() {
