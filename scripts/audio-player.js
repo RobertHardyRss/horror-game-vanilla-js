@@ -59,7 +59,7 @@ export class AudioPlayer {
 	}
 
 	loseGame() {
-		openDoor.volume = 0.1;
+		gameLose.volume = 0.1;
 		gameLose.play();
 	}
 
