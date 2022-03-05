@@ -1,7 +1,6 @@
 //@ts-check
-
-import { Game } from "../game.js";
-import { GameObject } from "./game-object.js";
+import { GameObject } from "./game-objects/game-object.js";
+import { Game } from "./game-objects/game.js";
 
 export class ExitPortal extends GameObject {
 	/**

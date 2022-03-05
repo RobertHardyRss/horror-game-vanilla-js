@@ -1,7 +1,7 @@
 //@ts-check
 
 import { canvas, ctx } from "../canvas.js";
-import { Game } from "../game.js";
+import { Game } from "../game-objects/game.js";
 import { GameObject } from "../game-objects/game-object.js";
 
 export class GameOverScene extends GameObject {
@@ -10,49 +10,39 @@ export class GameOverScene extends GameObject {
 	 */
 	constructor(game) {
 		super(canvas.width, canvas.height, 0, 0);
+
 		this.fillStyle = ctx.createLinearGradient(0, 0, 0, canvas.height);
-		this.fillStyle.addColorStop(0, "red");
-		this.fillStyle.addColorStop(0.9, "black");
-
+		this.fillStyle.addColorStop(0, "gray");
+		this.fillStyle.addColorStop(1, "black");
 		this.textGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-		this.textGradient.addColorStop(0, "green");
-		this.textGradient.addColorStop(0.2, "green");
-		this.textGradient.addColorStop(0.5, "yellow");
-		this.textGradient.addColorStop(0.8, "green");
-		this.textGradient.addColorStop(1, "purple");
-
+		this.textGradient.addColorStop(0, "red");
+		this.textGradient.addColorStop(1, "Orange");
 		this.game = game;
-
 		canvas.addEventListener(
 			"click",
 			() => {
-				this.game.restart();
+				this.game.reset();
 			},
 			{ once: true }
 		);
 	}
-
 	render() {
 		super.render();
-
 		ctx.save();
 		ctx.fillStyle = this.textGradient;
 		ctx.textAlign = "center";
 		ctx.textBaseline = "middle";
-
-		ctx.font = "180px zombiecontrol";
-		ctx.fillText("You Died!", canvas.width / 2, 150);
-
-		ctx.font = "60px zombiecontrol";
+		ctx.font = "100px zombiecontrol";
+		ctx.fillText("YOU DIED", canvas.width / 2, 100);
+		ctx.font = "70px zombiecontrol";
 		ctx.fillText(
-			`You complete ${this.game.currentLevel} levels`,
+			`You survived ${this.game.currentLevel} levels`,
 			canvas.width / 2,
 			canvas.height / 2
 		);
-
-		ctx.font = "80px zombiecontrol";
+		ctx.font = "75px zombiecontrol";
 		ctx.fillText(
-			"Click to try again",
+			"Click to try again!",
 			canvas.width / 2,
 			canvas.height - 60
 		);

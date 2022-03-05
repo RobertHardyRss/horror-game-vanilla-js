@@ -1,16 +1,18 @@
 //@ts-check
-import { AudioPlayer } from "./audio-player.js";
-import { canvas, ctx } from "./canvas.js";
-import { Barrier } from "./game-objects/barrier.js";
-import { Door } from "./game-objects/door.js";
-import { ExitPortal } from "./game-objects/exit-portal.js";
-import { Key } from "./game-objects/key.js";
-import { Monster } from "./game-objects/monster.js";
-import { Player } from "./game-objects/player.js";
-import { level1, level2 } from "./levels.js";
-import { GameOverScene } from "./scenes/game-over.js";
-import { GameWonScene } from "./scenes/game-won.js";
-import { StartScene } from "./scenes/start.js";
+
+import { Key } from "./key.js";
+import { GameObject } from "./game-object.js";
+import { canvas, ctx } from "../canvas.js";
+import { Barrier } from "./barrier.js";
+import { Monster } from "./monster.js";
+import { Player } from "./player.js";
+import { Door } from "./door.js";
+import { ExitPortal } from "../exit-portal.js";
+import { StartScene } from "../scenes/start.js";
+import { GameOverScene } from "../scenes/game-over.js";
+import { GameWonScene } from "../scenes/game-won.js";
+import { AudioPlayer } from "../scenes/audio-player.js";
+import { level1 } from "../levels.js";
 
 export class Game {
 	constructor() {
@@ -21,25 +23,26 @@ export class Game {
 		this.exitPortal = undefined;
 		this.gameObjects = [];
 
-		this.isPlayerDead = false;
+		this.isDead = false;
 		this.isLevelComplete = false;
 
-		this.levels = [level1, level2];
+		this.levels = [level1];
 		this.currentLevel = 0;
 
 		this.currentTime = 0;
 
 		this.audioPlayer = new AudioPlayer();
 	}
-
 	init() {
 		let start = new StartScene(this);
 		this.gameObjects.push(start);
 		requestAnimationFrame(gameLoop);
 	}
-
+	reset() {
+		this.resetGame();
+		this.start();
+	}
 	resetGame() {
-		// re-init game stuff
 		this.player = undefined;
 		this.barriers = [];
 		this.monsters = [];
@@ -47,45 +50,36 @@ export class Game {
 		this.exitPortal = undefined;
 		this.gameObjects = [];
 
-		this.isPlayerDead = false;
+		this.isDead = false;
 		this.isLevelComplete = false;
 	}
-
 	start() {
 		this.audioPlayer.init();
 		this.audioPlayer.playMusic();
 		this.currentLevel = 0;
 		this.loadLevel();
 	}
-
-	restart() {
-		this.resetGame();
-		this.start();
-	}
-
-	gameOverLose() {
-		this.resetGame();
-		this.audioPlayer.loseGame();
+	gameOver() {
+		this.reset();
+		this.audioPlayer.loseDead();
 		let gameOver = new GameOverScene(this);
-		this.gameObjects = [gameOver];
+		this.gameObjects.push(gameOver);
 	}
 
-	gameOverWin() {
-		this.resetGame();
+	winGame() {
+		this.reset();
 		this.audioPlayer.winGame();
-		let win = new GameWonScene(this);
-		this.gameObjects = [win];
+		let winGame = new GameWonScene(this);
+		this.gameObjects = [winGame];
 	}
-
 	nextLevel() {
 		this.resetGame();
 		this.currentLevel++;
-
 		if (this.currentLevel < this.levels.length) {
-			this.audioPlayer.exitPortal();
+			this.audioPlayer.exit();
 			this.loadLevel();
 		} else {
-			this.gameOverWin();
+			this.winGame();
 		}
 	}
 
@@ -152,8 +146,9 @@ function gameLoop(timestamp) {
 	if (game.isLevelComplete) {
 		game.nextLevel();
 	}
-	if (game.isPlayerDead) {
-		game.gameOverLose();
+
+	if (game.isDead) {
+		game.gameOver();
 	}
 
 	let elapsedTime = Math.floor(timestamp - game.currentTime);
