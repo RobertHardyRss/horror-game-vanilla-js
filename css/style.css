@@ -12,12 +12,25 @@ body {
 	justify-content: center;
 	align-items: center;
 	font-family: zombiecontrol;
+	background-color: black;
+}
+
+h1 {
+	font-family: zombiecontrol3d;
+	color: green;
+	font-size: 60px;
+}
+
+h2 {
+	font-size: 40px;
+	color: yellow;
+	font-family: zombiecontrol3d;
 }
 
 #game-canvas {
 	width: 800px;
 	height: 600px;
-	border: solid 1px black;
+	/* border: solid 1px black; */
 }
 
 @font-face {

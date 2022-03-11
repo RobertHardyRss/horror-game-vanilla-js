@@ -7,7 +7,7 @@ import { ExitPortal } from "./game-objects/exit-portal.js";
 import { Key } from "./game-objects/key.js";
 import { Monster } from "./game-objects/monster.js";
 import { Player } from "./game-objects/player.js";
-import { level1, level2 } from "./levels.js";
+import { Level, levels } from "./levels.js";
 import { GameOverScene } from "./scenes/game-over.js";
 import { GameWonScene } from "./scenes/game-won.js";
 import { StartScene } from "./scenes/start.js";
@@ -24,12 +24,21 @@ export class Game {
 		this.isPlayerDead = false;
 		this.isLevelComplete = false;
 
-		this.levels = [level1, level2];
+		/** @type { Level[] } */
+		this.levels = levels;
 		this.currentLevel = 0;
+		this.levelNameHeader = document.getElementById("level-name");
+		this.defaultLevelName = "Can you survive the madness?";
 
 		this.currentTime = 0;
 
 		this.audioPlayer = new AudioPlayer();
+
+		document.addEventListener("keydown", (e) => {
+			if (e.key === "n") {
+				this.cycleLevel();
+			}
+		});
 	}
 
 	init() {
@@ -68,6 +77,7 @@ export class Game {
 		this.audioPlayer.loseGame();
 		let gameOver = new GameOverScene(this);
 		this.gameObjects = [gameOver];
+		this.levelNameHeader.innerText = this.defaultLevelName;
 	}
 
 	gameOverWin() {
@@ -75,6 +85,16 @@ export class Game {
 		this.audioPlayer.winGame();
 		let win = new GameWonScene(this);
 		this.gameObjects = [win];
+		this.levelNameHeader.innerText = this.defaultLevelName;
+	}
+
+	cycleLevel() {
+		this.resetGame();
+		this.currentLevel++;
+		if (this.currentLevel === this.levels.length) {
+			this.currentLevel = 0;
+		}
+		this.loadLevel();
 	}
 
 	nextLevel() {
@@ -91,11 +111,12 @@ export class Game {
 
 	loadLevel() {
 		let level = this.levels[this.currentLevel];
+		this.levelNameHeader.innerText = level.name;
 
 		let monsterCoords = [];
 		let playerCoords = { x: 0, y: 0 };
 
-		level.forEach((row, idx) => {
+		level.data.forEach((row, idx) => {
 			for (let col = 0; col < row.length; col++) {
 				let x = col * 16;
 				let y = idx * 16;

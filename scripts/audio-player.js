@@ -5,10 +5,15 @@ let openDoor = document.getElementById("open-door");
 let gameLose = document.getElementById("game-lose");
 let exitPortal = document.getElementById("exit-portal");
 
+let musicVolume = 0.05;
 let musicLow = document.getElementById("music-low");
+musicLow.volume = musicVolume;
 let musicMed = document.getElementById("music-med");
+musicMed.volume = musicVolume;
 let musicHigh1 = document.getElementById("music-hi1");
+musicHigh1.volume = musicVolume;
 let musicHigh2 = document.getElementById("music-hi2");
+musicHigh2.volume = musicVolume;
 
 //@ts-check
 export class AudioPlayer {
@@ -30,6 +35,13 @@ export class AudioPlayer {
 		let loopToPlay = this.loops[this.currentLoop];
 		loopToPlay.play();
 		this.wireUpNextMusicLoop(loopToPlay);
+	}
+
+	stopMusic() {
+		this.loops.forEach((l) => {
+			l.pause();
+			l.currentTime = 0;
+		});
 	}
 
 	/** @param {HTMLAudioElement} loop */
@@ -59,15 +71,19 @@ export class AudioPlayer {
 	}
 
 	loseGame() {
-		gameLose.volume = 0.1;
+		this.stopMusic();
+		gameLose.volume = 0.2;
 		gameLose.play();
 	}
 
 	winGame() {
+		this.stopMusic();
 		gameWin.play();
 	}
 
 	exitPortal() {
+		this.stopMusic();
 		exitPortal.play();
+		this.playMusic();
 	}
 }

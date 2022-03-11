@@ -13,15 +13,15 @@ export class ExitPortal extends GameObject {
 		super(32, 32, x, y);
 		this.game = game;
 
-		this.hue = 0;
+		this.hue = 160;
 		this.setFillStyle();
 	}
 
 	setFillStyle() {
 		// update the hue value with each call
 		// and reset it to zero if it goes over 360
-		if (this.hue > 360) this.hue = 0;
-		this.hue += 1; // increasing this number cycles colors faster
+		if (this.hue > 300) this.hue = 160;
+		this.hue += 5; // increasing this number cycles colors faster
 		// set the fill style to the current HSLA value
 		this.fillStyle = `hsla(${this.hue}, 100%, 50%, 1)`;
 	}
